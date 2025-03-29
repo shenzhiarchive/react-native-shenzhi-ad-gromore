@@ -50,6 +50,11 @@ android {
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
+    
+    // 设置支持的 SO 库架构
+    ndk {
+      abiFilters "armeabi-v7a", "arm64-v8a"
+    }
   }
 
   buildFeatures {
@@ -59,6 +64,7 @@ android {
   buildTypes {
     release {
       minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
 
@@ -88,13 +94,53 @@ repositories {
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
 
+// 定义一个属性，用于控制是否包含测试工具
+// 可以通过 ./gradlew -PexcludeTestTools=true 命令行参数来控制
+def excludeTestTools = project.hasProperty('excludeTestTools') ? project.property('excludeTestTools').toBoolean() : false
+
 dependencies {
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  
+  // 融合基础包，必须引入
+  implementation(name: "open_ad_sdk_6.7.0.6", ext: 'aar')
+  
+  // 测试工具,不可带到线上
+  // 只在debug构建且未指定excludeTestTools=true时添加
+  def debugBuild = true
+  gradle.startParameter.taskNames.each {
+    if (it.contains('Release') || it.contains('release')) {
+      debugBuild = false
+    }
+  }
+  
+  if (debugBuild && !excludeTestTools) {
+    implementation(name: 'tools-release', ext: 'aar')
+  }
 }
 
 react {
   jsRootDir = file("../src/")
   libraryName = "ShenzhiAdGromore"
   codegenJavaPackageName = "com.shenzhiadgromore"
+}
+
+// 添加一个任务用于删除测试工具文件
+task removeTestTools {
+  doLast {
+    def testToolsFile = file("libs/tools-release.aar")
+    if (testToolsFile.exists()) {
+      testToolsFile.delete()
+      println "测试工具已被移除"
+    } else {
+      println "测试工具文件不存在"
+    }
+  }
+}
+
+// 如果使用release构建，自动执行removeTestTools任务
+tasks.whenTaskAdded { task ->
+  if (task.name.contains("assembleRelease") || task.name.contains("bundleRelease")) {
+    task.dependsOn removeTestTools
+  }
 }
