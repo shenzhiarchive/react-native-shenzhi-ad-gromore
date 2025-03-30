@@ -53,11 +53,56 @@ export interface InitCallback {
   onFail?: (code: number, message: string) => void;
 }
 
+// 开屏广告配置
+export interface SplashAdConfig {
+  // 聚合广告位ID
+  codeId: string;
+  // 是否使用缓存
+  useCache?: boolean;
+  // 广告超时时间(ms)，默认3500ms
+  timeOut?: number;
+  // 宽高(px)
+  width?: number;
+  height?: number;
+  // 是否开启预加载广告
+  preLoad?: boolean;
+}
+
+// 开屏广告事件回调
+export interface SplashAdCallback {
+  // 广告加载成功回调
+  onSplashLoadSuccess?: () => void;
+  // 广告加载失败回调
+  onSplashLoadFail?: (code: number, message: string) => void;
+  // 广告渲染成功回调
+  onSplashRenderSuccess?: () => void;
+  // 广告渲染失败回调
+  onSplashRenderFail?: (code: number, message: string) => void;
+  // 广告展示回调
+  onSplashAdShow?: () => void;
+  // 广告点击回调
+  onSplashAdClick?: () => void;
+  // 广告关闭回调
+  onSplashAdClose?: () => void;
+}
+
 export interface Spec extends TurboModule {
   multiply(a: number, b: number): number;
-  
+
   // 初始化SDK
   initSDK(config: InitConfig, callback: InitCallback): void;
+
+  // 加载开屏广告
+  loadSplashAd(config: SplashAdConfig, callback: SplashAdCallback): void;
+
+  // 展示开屏广告
+  showSplashAd(): boolean;
+
+  // 检查缓存广告是否可用
+  isSplashAdCacheAvailable(): boolean;
+
+  // 销毁开屏广告
+  destroySplashAd(): void;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('ShenzhiAdGromore');

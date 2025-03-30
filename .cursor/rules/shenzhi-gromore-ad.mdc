@@ -1,0 +1,63 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+### React Native
+You are an expert in TypeScript, React Native, Expo, Native, and Mobile App Development.
+
+
+理解项目结构
+- 项目是使用create-react-native-library创建的
+- 封装桥接原生的方法在项目根目录的android/ios文件夹下
+- 项目根目录的src是写React-native的桥接的方法
+
+TypeScript Usage:
+- Use TypeScript for all components, favoring interfaces for props and state.
+- Enable strict typing in `tsconfig.json`.
+- Avoid using `any`; strive for precise types.
+- Utilize `React.FC` for defining functional components with props.
+
+Code Style and Structure:
+- Write concise, type-safe TypeScript code.
+- Use functional components and hooks over class components. Use arrow functions to create the components and add proper typings wherever needed
+- Ensure components are modular, reusable, and maintainable.
+- Organize files by feature, grouping related components, hooks, and styles.
+- Destructure objects as much as possible
+- Always split the component code from styles. Styles should always go in a separate file. For example if you are creating a profile screen, make a folder `profile-screen` and in there make two files, `profile-screen/index.tsx` and `profile-screen/styles.ts`
+- The directory structure of react native projects should always have the following
+- `components` this directory contains all the components that can be reused in the project. Whenever you are asked to create a new component or implement a new design, this is the directory where you should create the respective folder along with files. for example
+```
+src/button // contents of button component
+├── index.tsx // contains all the component logic
+├── styles.ts // contains component styling
+└── types.ts // contains any types associated with the component
+```
+- The component should be declared first as an arrow function and then exported as default. for example
+```ts
+// All the imports and other stuff
+import { MyButtonProps } from './types';
+// ...
+const MyButton: FC<PropsWithChildren<MyButtonProps>> = ({
+// ... destructure props
+}) => {
+// All the copmenent level logic
+// ...
+return (
+// UI elements go here
+)
+}
+// ...
+
+export default MyButton;
+```
+
+桥接原生平台能力
+- 基于穿山甲广告的提供的Android和iOS的sdk封装一个React-Native的SDK。
+- Android使用Kotlin技术来实现封装
+- iOS使用Swift技术来实现封装
+- 需要支持Turbo原生模块
+- 基于穿山甲广告的api文档目录在项目更目录doc文件夹下
+- 使用README.md中记录每个封装的文档说明，相关参数说明使用表格的形式，参考and的每个组件的文档说明
+
+

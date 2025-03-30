@@ -1,20 +1,13 @@
-import { Text, View, StyleSheet } from 'react-native';
-import { multiply } from 'react-native-shenzhi-ad-gromore';
+import React from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import SplashAdDemo from './SplashAdDemo';
 
-const result = multiply(3, 7);
-
-export default function App() {
+const App: React.FC = () => {
   return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-    </View>
+    <SafeAreaProvider>
+      <SplashAdDemo />
+    </SafeAreaProvider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;

@@ -103,6 +103,96 @@ initSDK(
 > 2. 请确保在初始化成功回调后再请求广告
 > 3. 隐私合规是必要的，建议在获得用户同意后再进行初始化
 
+### 开屏广告
+
+开屏广告是在应用启动或页面切换时展示的全屏广告，通常在应用启动页（Splash页面）使用。
+
+#### 使用方法
+
+```js
+import { SplashAd } from 'react-native-shenzhi-ad-gromore';
+
+// 加载并展示开屏广告
+SplashAd.loadAndShowSplashAd(
+  {
+    codeId: '您的开屏广告位ID', // 必填参数
+    useCache: true, // 设置为true开启自动缓存功能，下次启动更快展示广告
+    timeOut: 3500, // 超时时间(ms)，默认3500ms
+  },
+  {
+    // 加载回调
+    onSplashLoadSuccess: () => {
+      console.log('开屏广告物料、素材加载成功');
+    },
+    onSplashLoadFail: (code, message) => {
+      console.error(`开屏广告加载失败: ${code}, ${message}`);
+    },
+    
+    // 渲染回调
+    onSplashRenderSuccess: () => {
+      console.log('开屏广告渲染成功，自动展示');
+    },
+    onSplashRenderFail: (code, message) => {
+      console.error(`开屏广告渲染失败: ${code}, ${message}`);
+    },
+    
+    // 广告事件回调
+    onSplashAdShow: () => {
+      console.log('开屏广告展示');
+    },
+    onSplashAdClick: () => {
+      console.log('开屏广告被点击');
+    },
+    onSplashAdClose: () => {
+      console.log('开屏广告关闭');
+      // 无需手动销毁，内部自动处理
+    },
+  }
+);
+```
+
+#### 自动缓存工作流程
+
+当设置`useCache: true`时，开屏广告将自动缓存并管理广告生命周期：
+
+1. 首次加载广告时，加载并展示广告
+2. 广告展示完成后，自动销毁广告资源
+3. 同时在后台自动开始预加载下一个广告，用于下次使用
+4. 下次调用`loadAndShowSplashAd`时，如果有缓存的广告且在有效期内，将直接使用缓存广告
+
+这种方式简化了开发者的使用流程，无需手动管理缓存逻辑和广告销毁。
+
+#### 完整参数说明
+
+##### SplashAdConfig 参数
+
+| 参数名 | 类型 | 必填 | 说明 |
+| ------ | ---- | :--: | ---- |
+| codeId | string | ✅ | 聚合广告位ID |
+| useCache | boolean | ❌ | 是否使用并自动管理缓存，默认false |
+| timeOut | number | ❌ | 广告超时时间(ms)，默认3500ms |
+| width | number | ❌ | 广告宽度(px)，默认屏幕宽度 |
+| height | number | ❌ | 广告高度(px)，默认屏幕高度 |
+
+##### SplashAdCallback 回调
+
+| 回调名 | 参数 | 说明 |
+| ------ | ---- | ---- |
+| onSplashLoadSuccess | 无 | 广告物料、素材加载成功 |
+| onSplashLoadFail | (code: number, message: string) | 广告物料、素材加载失败或超时 |
+| onSplashRenderSuccess | 无 | 广告渲染成功，将自动展示 |
+| onSplashRenderFail | (code: number, message: string) | 广告渲染失败 |
+| onSplashAdShow | 无 | 广告展示 |
+| onSplashAdClick | 无 | 广告被点击 |
+| onSplashAdClose | 无 | 广告关闭（用户点击跳过/倒计时结束） |
+
+> **注意事项**:
+> 
+> 1. 开屏广告宽高须符合：width >= 70% 屏幕宽，height >= 50% 屏幕高
+> 2. 需确保SDK初始化成功后再加载广告
+> 3. 广告销毁和缓存预加载已在内部处理，开发者无需关心
+> 4. 目前仅支持Android平台
+
 ## Android配置
 
 ### 移除测试工具

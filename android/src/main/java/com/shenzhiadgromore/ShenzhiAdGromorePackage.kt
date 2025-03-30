@@ -1,33 +1,19 @@
 package com.shenzhiadgromore
 
-import com.facebook.react.BaseReactPackage
+import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.module.model.ReactModuleInfo
-import com.facebook.react.module.model.ReactModuleInfoProvider
-import java.util.HashMap
+import com.facebook.react.uimanager.ViewManager
 
-class ShenzhiAdGromorePackage : BaseReactPackage() {
-  override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
-    return if (name == ShenzhiAdGromoreModule.NAME) {
-      ShenzhiAdGromoreModule(reactContext)
-    } else {
-      null
-    }
+class ShenzhiAdGromorePackage : ReactPackage {
+  override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
+    return listOf(
+      ShenzhiAdGromoreModule(reactContext),
+      SplashAdModule(reactContext)
+    )
   }
 
-  override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
-    return ReactModuleInfoProvider {
-      val moduleInfos: MutableMap<String, ReactModuleInfo> = HashMap()
-      moduleInfos[ShenzhiAdGromoreModule.NAME] = ReactModuleInfo(
-        ShenzhiAdGromoreModule.NAME,
-        ShenzhiAdGromoreModule.NAME,
-        false,  // canOverrideExistingModule
-        false,  // needsEagerInit
-        false,  // isCxxModule
-        true // isTurboModule
-      )
-      moduleInfos
-    }
+  override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
+    return emptyList()
   }
 }

@@ -2,9 +2,7 @@ package com.shenzhiadgromore
 
 import android.util.Log
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
-import com.facebook.react.bridge.Callback
 import com.facebook.react.module.annotations.ReactModule
 import com.bytedance.sdk.openadsdk.TTAdConfig
 import com.bytedance.sdk.openadsdk.TTAdSdk
